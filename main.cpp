@@ -7,11 +7,11 @@ using std::cout;
 using std::cin;
 using std::endl;
 
-
 int main() {
     std::vector<cpr::Pair> payloadData;
-
-    std::string s1, s2;
+    std::string s1, s2, address;
+    cpr::Response response;
+    address = "?";
 
    do{
         cout << "Enter command: ";
@@ -22,13 +22,15 @@ int main() {
     }while(s1 != "get" || s1 != "post");
 
    if(s1 == "post"){
-       cpr::Response response = cpr::Post(cpr::Url("http://httpbin.org/post"), cpr::Payload(payloadData.begin(), payloadData.end()));
+       response = cpr::Post(cpr::Url("http://httpbin.org/post"), cpr::Payload(payloadData.begin(), payloadData.end()));
        cout << response.text << endl;
    }else if(s1 == "get"){
-
+       for(int i = 0; i < payloadData.size(); i++){
+           address += payloadData[i].key + "=" + payloadData[i].value + "&";
+       }
+       response = cpr::Get(cpr::Url("http://httpbin.org/get" + address));
+       cout << response.text << endl;
    }
-
-
 
     return 0;
 }
